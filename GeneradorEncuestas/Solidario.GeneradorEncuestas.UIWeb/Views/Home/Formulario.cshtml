@@ -1,0 +1,141 @@
+﻿@model Solidario.GeneradorEncuestas.UIWeb.WSFormularios.DtoFormulario
+@using Solidario.GeneradorEncuestas.UIWeb.Clases
+<!DOCTYPE html>
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Formulario</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/css/AdminLTE.min.css">
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Content/js/Formulario.js"></script>
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box" style="background-color:white;">
+
+        <div class="login-box-body">
+            <div class="box box-widget widget-user">
+                <div class="widget-user-header bg-aqua-active">
+                    <h3 class="widget-user-username">@Model.Descripcion</h3>
+                </div>
+            </div>
+            @foreach (var pregunta in Model.Preguntas)
+            {
+                string esObligatoria = pregunta.EsObligatorio ? "*" : string.Empty;
+                <div class="box box-primary box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">@pregunta.Descripcion @esObligatoria</h3>
+                    </div>
+                    <div class="box-body">
+                        @if (pregunta.TipoPregunta.Codigo.Equals(Comun.TipoPregunta.ESMULTIPLE.ToString()))
+                        {
+                            <div class="form-group">
+                                @foreach (var o in pregunta.ValoresPregunta)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            @*<input type="checkbox" id="@o.Id" value="@o.Id">*@
+                                            <input type="checkbox" id="@pregunta.Id" value="@o.Id" class="CheckBox_@pregunta.Id.ToString()">
+                                            @o.Valor
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else if (pregunta.TipoPregunta.Codigo.Equals(Comun.TipoPregunta.ESPARRAFO.ToString()))
+                        {
+                            <div class="form-group">
+                                <textarea id="@pregunta.Id" class="form-control" rows="3" placeholder="Ingrese Respuesta ..."></textarea>
+                            </div>
+                        }
+                        else if (pregunta.TipoPregunta.Codigo.Equals(Comun.TipoPregunta.ESSELECCION.ToString()))
+                        {
+                            <div class="form-group">
+                                <select class="form-control" id="@pregunta.Id">
+                                    @foreach (var o in pregunta.ValoresPregunta)
+                                    {
+                                        <option value="@o.Id">@o.Valor</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else if (pregunta.TipoPregunta.Codigo.Equals(Comun.TipoPregunta.ESTEXTO.ToString()))
+                        {
+                            <div class="form-group">
+                                <input type="text" id="@pregunta.Id" class="form-control" placeholder="Ingrese Respuesta ...">
+                            </div>
+                        }
+                        else if (pregunta.TipoPregunta.Codigo.Equals(Comun.TipoPregunta.ESUNICA.ToString()))
+                        {
+                            <div class="form-group">
+                                @foreach (var o in pregunta.ValoresPregunta)
+                                {
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" id="@o.Id" name="OpcionPreguntas" value="@o.Id">
+                                            @o.Valor
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-xs-4">
+                    <button type="submit" id="Enviar" class="btn btn-primary btn-block btn-flat">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalConfirmacion" class="modal fade" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:firebrick;color:#fff">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Confirmación</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="texto01" style="padding-left:30px;font-weight:bold"></p>
+                    <p style="padding-left:30px;">No ha sido contestada.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Regresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type='text/javascript'>
+        var _PreguntasObligatorias = [];
+        @{
+            foreach(var pregunta in Model.Preguntas)
+            {
+                if(pregunta.EsObligatorio)
+                {
+                    <text>
+        _PreguntasObligatorias.push(
+            {
+                Id: @pregunta.Id,
+                Descripcion: '@pregunta.Descripcion',
+                TipoPregunta: '@pregunta.TipoPregunta.Codigo'
+            }
+        );
+                    </text>
+                }
+            }
+        }
+    </script>
+</body>
+</html>

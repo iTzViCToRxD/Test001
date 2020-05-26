@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ModeloGeneradorEncuestas.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+          </Key>
+          <Property Name="IdCliente" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Identificacion" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="255" />
+          <Property Name="Apellidos" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Formulario">
+          <Key>
+            <PropertyRef Name="IdFormulario" />
+          </Key>
+          <Property Name="IdFormulario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="EsActivo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pregunta">
+          <Key>
+            <PropertyRef Name="IdPregunta" />
+          </Key>
+          <Property Name="IdPregunta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdFormulario" Type="int" Nullable="false" />
+          <Property Name="IdTipoPregunta" Type="int" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+          <Property Name="EsVisible" Type="bit" Nullable="false" />
+          <Property Name="EsObligatorio" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Respuesta">
+          <Key>
+            <PropertyRef Name="IdRespuesta" />
+          </Key>
+          <Property Name="IdRespuesta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPregunta" Type="int" Nullable="false" />
+          <Property Name="IdCliente" Type="int" Nullable="false" />
+          <Property Name="IdValoresPregunta" Type="int" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="5000" />
+          <Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TipoPregunta">
+          <Key>
+            <PropertyRef Name="IdTipoPregunta" />
+          </Key>
+          <Property Name="IdTipoPregunta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ValoresPregunta">
+          <Key>
+            <PropertyRef Name="IdValoresPregunta" />
+          </Key>
+          <Property Name="IdValoresPregunta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPregunta" Type="int" Nullable="false" />
+          <Property Name="Valor" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+          <Property Name="EsVisible" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Formulario_REF_Pregunta">
+          <End Role="Formulario" Type="Self.Formulario" Multiplicity="1" />
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Formulario">
+              <PropertyRef Name="IdFormulario" />
+            </Principal>
+            <Dependent Role="Pregunta">
+              <PropertyRef Name="IdFormulario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pregunta_REF_TipoPregunta">
+          <End Role="TipoPregunta" Type="Self.TipoPregunta" Multiplicity="1" />
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoPregunta">
+              <PropertyRef Name="IdTipoPregunta" />
+            </Principal>
+            <Dependent Role="Pregunta">
+              <PropertyRef Name="IdTipoPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_REF_Cliente">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_REF_Pregunta">
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_REF_ValoresPregunta">
+          <End Role="ValoresPregunta" Type="Self.ValoresPregunta" Multiplicity="0..1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ValoresPregunta">
+              <PropertyRef Name="IdValoresPregunta" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdValoresPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ValoresPregunta_REF_Pregunta">
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="1" />
+          <End Role="ValoresPregunta" Type="Self.ValoresPregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Principal>
+            <Dependent Role="ValoresPregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModeloGeneradorEncuestasStoreContainer">
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Formulario" EntityType="Self.Formulario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pregunta" EntityType="Self.Pregunta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Respuesta" EntityType="Self.Respuesta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TipoPregunta" EntityType="Self.TipoPregunta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ValoresPregunta" EntityType="Self.ValoresPregunta" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Formulario_REF_Pregunta" Association="Self.FK_Formulario_REF_Pregunta">
+            <End Role="Formulario" EntitySet="Formulario" />
+            <End Role="Pregunta" EntitySet="Pregunta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pregunta_REF_TipoPregunta" Association="Self.FK_Pregunta_REF_TipoPregunta">
+            <End Role="TipoPregunta" EntitySet="TipoPregunta" />
+            <End Role="Pregunta" EntitySet="Pregunta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_REF_Cliente" Association="Self.FK_Respuesta_REF_Cliente">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Respuesta" EntitySet="Respuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_REF_Pregunta" Association="Self.FK_Respuesta_REF_Pregunta">
+            <End Role="Pregunta" EntitySet="Pregunta" />
+            <End Role="Respuesta" EntitySet="Respuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_REF_ValoresPregunta" Association="Self.FK_Respuesta_REF_ValoresPregunta">
+            <End Role="ValoresPregunta" EntitySet="ValoresPregunta" />
+            <End Role="Respuesta" EntitySet="Respuesta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ValoresPregunta_REF_Pregunta" Association="Self.FK_ValoresPregunta_REF_Pregunta">
+            <End Role="Pregunta" EntitySet="Pregunta" />
+            <End Role="ValoresPregunta" EntitySet="ValoresPregunta" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ModeloGeneradorEncuestas" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+          </Key>
+          <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Identificacion" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombres" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Respuestas" Relationship="Self.FK_Respuesta_REF_Cliente" FromRole="Cliente" ToRole="Respuesta" />
+        </EntityType>
+        <EntityType Name="Formulario">
+          <Key>
+            <PropertyRef Name="IdFormulario" />
+          </Key>
+          <Property Name="IdFormulario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EsActivo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Preguntas" Relationship="Self.FK_Formulario_REF_Pregunta" FromRole="Formulario" ToRole="Pregunta" />
+          <Property Name="Codigo" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Pregunta">
+          <Key>
+            <PropertyRef Name="IdPregunta" />
+          </Key>
+          <Property Name="IdPregunta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdFormulario" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoPregunta" Type="Int32" Nullable="false" />
+          <Property Name="Codigo" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="EsVisible" Type="Boolean" Nullable="false" />
+          <Property Name="EsObligatorio" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Formulario" Relationship="Self.FK_Formulario_REF_Pregunta" FromRole="Pregunta" ToRole="Formulario" />
+          <NavigationProperty Name="TipoPregunta" Relationship="Self.FK_Pregunta_REF_TipoPregunta" FromRole="Pregunta" ToRole="TipoPregunta" />
+          <NavigationProperty Name="Respuestas" Relationship="Self.FK_Respuesta_REF_Pregunta" FromRole="Pregunta" ToRole="Respuesta" />
+          <NavigationProperty Name="ValoresPreguntas" Relationship="Self.FK_ValoresPregunta_REF_Pregunta" FromRole="Pregunta" ToRole="ValoresPregunta" />
+        </EntityType>
+        <EntityType Name="Respuesta">
+          <Key>
+            <PropertyRef Name="IdRespuesta" />
+          </Key>
+          <Property Name="IdRespuesta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPregunta" Type="Int32" Nullable="false" />
+          <Property Name="IdCliente" Type="Int32" Nullable="false" />
+          <Property Name="IdValoresPregunta" Type="Int32" />
+          <Property Name="Descripcion" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK_Respuesta_REF_Cliente" FromRole="Respuesta" ToRole="Cliente" />
+          <NavigationProperty Name="Pregunta" Relationship="Self.FK_Respuesta_REF_Pregunta" FromRole="Respuesta" ToRole="Pregunta" />
+          <NavigationProperty Name="ValoresPregunta" Relationship="Self.FK_Respuesta_REF_ValoresPregunta" FromRole="Respuesta" ToRole="ValoresPregunta" />
+        </EntityType>
+        <EntityType Name="TipoPregunta">
+          <Key>
+            <PropertyRef Name="IdTipoPregunta" />
+          </Key>
+          <Property Name="IdTipoPregunta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Codigo" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Preguntas" Relationship="Self.FK_Pregunta_REF_TipoPregunta" FromRole="TipoPregunta" ToRole="Pregunta" />
+        </EntityType>
+        <EntityType Name="ValoresPregunta">
+          <Key>
+            <PropertyRef Name="IdValoresPregunta" />
+          </Key>
+          <Property Name="IdValoresPregunta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPregunta" Type="Int32" Nullable="false" />
+          <Property Name="Valor" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+          <Property Name="EsVisible" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Pregunta" Relationship="Self.FK_ValoresPregunta_REF_Pregunta" FromRole="ValoresPregunta" ToRole="Pregunta" />
+          <NavigationProperty Name="Respuestas" Relationship="Self.FK_Respuesta_REF_ValoresPregunta" FromRole="ValoresPregunta" ToRole="Respuesta" />
+        </EntityType>
+        <Association Name="FK_Respuesta_REF_Cliente">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Formulario_REF_Pregunta">
+          <End Role="Formulario" Type="Self.Formulario" Multiplicity="1" />
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Formulario">
+              <PropertyRef Name="IdFormulario" />
+            </Principal>
+            <Dependent Role="Pregunta">
+              <PropertyRef Name="IdFormulario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pregunta_REF_TipoPregunta">
+          <End Role="TipoPregunta" Type="Self.TipoPregunta" Multiplicity="1" />
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoPregunta">
+              <PropertyRef Name="IdTipoPregunta" />
+            </Principal>
+            <Dependent Role="Pregunta">
+              <PropertyRef Name="IdTipoPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_REF_Pregunta">
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ValoresPregunta_REF_Pregunta">
+          <End Role="Pregunta" Type="Self.Pregunta" Multiplicity="1" />
+          <End Role="ValoresPregunta" Type="Self.ValoresPregunta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Principal>
+            <Dependent Role="ValoresPregunta">
+              <PropertyRef Name="IdPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respuesta_REF_ValoresPregunta">
+          <End Role="ValoresPregunta" Type="Self.ValoresPregunta" Multiplicity="0..1" />
+          <End Role="Respuesta" Type="Self.Respuesta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ValoresPregunta">
+              <PropertyRef Name="IdValoresPregunta" />
+            </Principal>
+            <Dependent Role="Respuesta">
+              <PropertyRef Name="IdValoresPregunta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GeneradorEncuestasEntidades" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clientes" EntityType="Self.Cliente" />
+          <EntitySet Name="Formularios" EntityType="Self.Formulario" />
+          <EntitySet Name="Preguntas" EntityType="Self.Pregunta" />
+          <EntitySet Name="Respuestas" EntityType="Self.Respuesta" />
+          <EntitySet Name="TipoPreguntas" EntityType="Self.TipoPregunta" />
+          <EntitySet Name="ValoresPreguntas" EntityType="Self.ValoresPregunta" />
+          <AssociationSet Name="FK_Respuesta_REF_Cliente" Association="Self.FK_Respuesta_REF_Cliente">
+            <End Role="Cliente" EntitySet="Clientes" />
+            <End Role="Respuesta" EntitySet="Respuestas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Formulario_REF_Pregunta" Association="Self.FK_Formulario_REF_Pregunta">
+            <End Role="Formulario" EntitySet="Formularios" />
+            <End Role="Pregunta" EntitySet="Preguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pregunta_REF_TipoPregunta" Association="Self.FK_Pregunta_REF_TipoPregunta">
+            <End Role="TipoPregunta" EntitySet="TipoPreguntas" />
+            <End Role="Pregunta" EntitySet="Preguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_REF_Pregunta" Association="Self.FK_Respuesta_REF_Pregunta">
+            <End Role="Pregunta" EntitySet="Preguntas" />
+            <End Role="Respuesta" EntitySet="Respuestas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ValoresPregunta_REF_Pregunta" Association="Self.FK_ValoresPregunta_REF_Pregunta">
+            <End Role="Pregunta" EntitySet="Preguntas" />
+            <End Role="ValoresPregunta" EntitySet="ValoresPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respuesta_REF_ValoresPregunta" Association="Self.FK_Respuesta_REF_ValoresPregunta">
+            <End Role="ValoresPregunta" EntitySet="ValoresPreguntas" />
+            <End Role="Respuesta" EntitySet="Respuestas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModeloGeneradorEncuestasStoreContainer" CdmEntityContainer="GeneradorEncuestasEntidades">
+          <EntitySetMapping Name="Clientes">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="Identificacion" ColumnName="Identificacion" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Formularios">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.Formulario">
+              <MappingFragment StoreEntitySet="Formulario">
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="IdFormulario" ColumnName="IdFormulario" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="EsActivo" ColumnName="EsActivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Preguntas">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.Pregunta">
+              <MappingFragment StoreEntitySet="Pregunta">
+                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+                <ScalarProperty Name="IdFormulario" ColumnName="IdFormulario" />
+                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="EsVisible" ColumnName="EsVisible" />
+                <ScalarProperty Name="EsObligatorio" ColumnName="EsObligatorio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Respuestas">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.Respuesta">
+              <MappingFragment StoreEntitySet="Respuesta">
+                <ScalarProperty Name="IdRespuesta" ColumnName="IdRespuesta" />
+                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="IdValoresPregunta" ColumnName="IdValoresPregunta" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoPreguntas">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.TipoPregunta">
+              <MappingFragment StoreEntitySet="TipoPregunta">
+                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ValoresPreguntas">
+            <EntityTypeMapping TypeName="ModeloGeneradorEncuestas.ValoresPregunta">
+              <MappingFragment StoreEntitySet="ValoresPregunta">
+                <ScalarProperty Name="IdValoresPregunta" ColumnName="IdValoresPregunta" />
+                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="EsVisible" ColumnName="EsVisible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

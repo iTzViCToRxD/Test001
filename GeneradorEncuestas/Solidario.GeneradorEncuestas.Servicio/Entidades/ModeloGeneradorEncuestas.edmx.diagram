@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="117201c5ff04425b8feee636a51fd3ab" Name="Diagram1">
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.Cliente" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.Formulario" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.Pregunta" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.Respuesta" Width="1.5" PointX="7.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.TipoPregunta" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ModeloGeneradorEncuestas.ValoresPregunta" Width="1.5" PointX="5.25" PointY="7" IsExpanded="true" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_Respuesta_REF_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_Formulario_REF_Pregunta" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_Pregunta_REF_TipoPregunta" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_Respuesta_REF_Pregunta" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_ValoresPregunta_REF_Pregunta" ManuallyRouted="false" />
+        <AssociationConnector Association="ModeloGeneradorEncuestas.FK_Respuesta_REF_ValoresPregunta" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
